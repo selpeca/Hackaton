@@ -22,7 +22,7 @@ namespace backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("shared.Entities.Awards", b =>
+            modelBuilder.Entity("shared.Entities.Award", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +48,7 @@ namespace backend.Migrations
                     b.ToTable("Awards");
                 });
 
-            modelBuilder.Entity("shared.Entities.Evaluations", b =>
+            modelBuilder.Entity("shared.Entities.Evaluation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,6 @@ namespace backend.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comments")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Judgment")
@@ -70,8 +69,8 @@ namespace backend.Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Score")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -104,7 +103,7 @@ namespace backend.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("ExperienceTeam");
+                    b.ToTable("ExperiencesTeam");
                 });
 
             modelBuilder.Entity("shared.Entities.Hackaton", b =>
@@ -146,15 +145,12 @@ namespace backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("PeopleId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PeopleId");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Mentor");
                 });
@@ -178,19 +174,16 @@ namespace backend.Migrations
 
                     b.HasIndex("MentorId");
 
-                    b.ToTable("MentorArea");
+                    b.ToTable("MentorsArea");
                 });
 
-            modelBuilder.Entity("shared.Entities.Participants", b =>
+            modelBuilder.Entity("shared.Entities.Participant", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("PeopleId")
-                        .HasColumnType("int");
 
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
@@ -202,12 +195,12 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PeopleId");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Participants");
                 });
 
-            modelBuilder.Entity("shared.Entities.People", b =>
+            modelBuilder.Entity("shared.Entities.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -219,7 +212,6 @@ namespace backend.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Document")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastName")
@@ -233,18 +225,18 @@ namespace backend.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("TypeDocument")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Document")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[Document] IS NOT NULL");
 
                     b.ToTable("People");
                 });
 
-            modelBuilder.Entity("shared.Entities.Projects", b =>
+            modelBuilder.Entity("shared.Entities.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -283,7 +275,28 @@ namespace backend.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("shared.Entities.TeamMembers", b =>
+            modelBuilder.Entity("shared.Entities.Team", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("NumMembers")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("shared.Entities.TeamMember", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -310,28 +323,7 @@ namespace backend.Migrations
                     b.ToTable("TeamMembers");
                 });
 
-            modelBuilder.Entity("shared.Entities.Teams", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("NumMembers")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Teams");
-                });
-
-            modelBuilder.Entity("shared.Entities.Awards", b =>
+            modelBuilder.Entity("shared.Entities.Award", b =>
                 {
                     b.HasOne("shared.Entities.Hackaton", "Hackaton")
                         .WithMany("Awards")
@@ -342,7 +334,7 @@ namespace backend.Migrations
                     b.Navigation("Hackaton");
                 });
 
-            modelBuilder.Entity("shared.Entities.Evaluations", b =>
+            modelBuilder.Entity("shared.Entities.Evaluation", b =>
                 {
                     b.HasOne("shared.Entities.Mentor", "Mentor")
                         .WithMany("Evaluations")
@@ -350,7 +342,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("shared.Entities.Projects", "Project")
+                    b.HasOne("shared.Entities.Project", "Project")
                         .WithMany("Evaluations")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -363,7 +355,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("shared.Entities.ExperienceTeam", b =>
                 {
-                    b.HasOne("shared.Entities.Teams", "Team")
+                    b.HasOne("shared.Entities.Team", "Team")
                         .WithMany("ExperienceTeams")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -374,19 +366,19 @@ namespace backend.Migrations
 
             modelBuilder.Entity("shared.Entities.Mentor", b =>
                 {
-                    b.HasOne("shared.Entities.People", "People")
+                    b.HasOne("shared.Entities.Person", "person")
                         .WithMany("Mentor")
-                        .HasForeignKey("PeopleId")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("People");
+                    b.Navigation("person");
                 });
 
             modelBuilder.Entity("shared.Entities.MentorArea", b =>
                 {
                     b.HasOne("shared.Entities.Mentor", "Mentor")
-                        .WithMany("MentorAreas")
+                        .WithMany("MentorsArea")
                         .HasForeignKey("MentorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -394,18 +386,18 @@ namespace backend.Migrations
                     b.Navigation("Mentor");
                 });
 
-            modelBuilder.Entity("shared.Entities.Participants", b =>
+            modelBuilder.Entity("shared.Entities.Participant", b =>
                 {
-                    b.HasOne("shared.Entities.People", "People")
+                    b.HasOne("shared.Entities.Person", "Person")
                         .WithMany("Participants")
-                        .HasForeignKey("PeopleId")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("People");
+                    b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("shared.Entities.Projects", b =>
+            modelBuilder.Entity("shared.Entities.Project", b =>
                 {
                     b.HasOne("shared.Entities.Hackaton", "Hackaton")
                         .WithMany("Projects")
@@ -413,7 +405,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("shared.Entities.Teams", "Team")
+                    b.HasOne("shared.Entities.Team", "Team")
                         .WithMany("Projects")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -424,15 +416,15 @@ namespace backend.Migrations
                     b.Navigation("Team");
                 });
 
-            modelBuilder.Entity("shared.Entities.TeamMembers", b =>
+            modelBuilder.Entity("shared.Entities.TeamMember", b =>
                 {
-                    b.HasOne("shared.Entities.Participants", "Participant")
+                    b.HasOne("shared.Entities.Participant", "Participant")
                         .WithMany()
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("shared.Entities.Teams", "Team")
+                    b.HasOne("shared.Entities.Team", "Team")
                         .WithMany("TeamMembers")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -454,22 +446,22 @@ namespace backend.Migrations
                 {
                     b.Navigation("Evaluations");
 
-                    b.Navigation("MentorAreas");
+                    b.Navigation("MentorsArea");
                 });
 
-            modelBuilder.Entity("shared.Entities.People", b =>
+            modelBuilder.Entity("shared.Entities.Person", b =>
                 {
                     b.Navigation("Mentor");
 
                     b.Navigation("Participants");
                 });
 
-            modelBuilder.Entity("shared.Entities.Projects", b =>
+            modelBuilder.Entity("shared.Entities.Project", b =>
                 {
                     b.Navigation("Evaluations");
                 });
 
-            modelBuilder.Entity("shared.Entities.Teams", b =>
+            modelBuilder.Entity("shared.Entities.Team", b =>
                 {
                     b.Navigation("ExperienceTeams");
 

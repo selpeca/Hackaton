@@ -2,7 +2,7 @@
 
 namespace shared.Entities;
 
-public class Projects
+public class Project
 {
     public int Id { get; set; }
     public int TeamId { get; set; }
@@ -18,8 +18,8 @@ public class Projects
     public DateTime DeliveryDate { get; set; }
 
     // Relaciones
-    public Teams Team { get; set; }
+    public Team Team { get; set; }
 
     public Hackaton Hackaton { get; set; }
-    public ICollection<Evaluations> Evaluations { get; set; }
+    public ICollection<Evaluation> Evaluations { get; set; }
 }

@@ -2,7 +2,7 @@
 
 namespace shared.Entities;
 
-public class Teams
+public class Team
 {
     public int Id { get; set; }
 
@@ -11,11 +11,12 @@ public class Teams
     [Required]
     public string Name { get; set; }
 
+    [Display(Name = "Numero de miembros")]
     public int NumMembers { get; set; }
 
     // Relaciones
-    public ICollection<TeamMembers> TeamMembers { get; set; }
+    public ICollection<TeamMember> TeamMembers { get; set; }
 
     public ICollection<ExperienceTeam> ExperienceTeams { get; set; }
-    public ICollection<Projects> Projects { get; set; }
+    public ICollection<Project> Projects { get; set; }
 }

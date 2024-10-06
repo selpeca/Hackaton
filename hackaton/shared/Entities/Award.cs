@@ -1,6 +1,6 @@
 ﻿namespace shared.Entities;
 
-public class Awards
+public class Award
 {
     public int Id { get; set; }
     public int HackatonId { get; set; }

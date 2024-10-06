@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class allmodels : Migration
+    public partial class fixmigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,44 +29,20 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mentor",
+                name: "People",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PersonId = table.Column<int>(type: "int", nullable: false),
-                    PeopleId = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TypeDocument = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Document = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mentor", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Mentor_People_PeopleId",
-                        column: x => x.PeopleId,
-                        principalTable: "People",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Participants",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Profession = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PersonId = table.Column<int>(type: "int", nullable: false),
-                    PeopleId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Participants", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Participants_People_PeopleId",
-                        column: x => x.PeopleId,
-                        principalTable: "People",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_People", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,27 +81,46 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MentorArea",
+                name: "Mentor",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MentorId = table.Column<int>(type: "int", nullable: false),
-                    Area = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PersonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MentorArea", x => x.Id);
+                    table.PrimaryKey("PK_Mentor", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MentorArea_Mentor_MentorId",
-                        column: x => x.MentorId,
-                        principalTable: "Mentor",
+                        name: "FK_Mentor_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExperienceTeam",
+                name: "Participants",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Profession = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PersonId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Participants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Participants_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExperiencesTeam",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -136,9 +131,9 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExperienceTeam", x => x.Id);
+                    table.PrimaryKey("PK_ExperiencesTeam", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ExperienceTeam_Teams_TeamId",
+                        name: "FK_ExperiencesTeam_Teams_TeamId",
                         column: x => x.TeamId,
                         principalTable: "Teams",
                         principalColumn: "Id",
@@ -171,6 +166,26 @@ namespace backend.Migrations
                         name: "FK_Projects_Teams_TeamId",
                         column: x => x.TeamId,
                         principalTable: "Teams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MentorsArea",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MentorId = table.Column<int>(type: "int", nullable: false),
+                    Area = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MentorsArea", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MentorsArea_Mentor_MentorId",
+                        column: x => x.MentorId,
+                        principalTable: "Mentor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -211,8 +226,8 @@ namespace backend.Migrations
                     MentorId = table.Column<int>(type: "int", nullable: false),
                     ProjectId = table.Column<int>(type: "int", nullable: false),
                     Judgment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Score = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -247,24 +262,31 @@ namespace backend.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExperienceTeam_TeamId",
-                table: "ExperienceTeam",
+                name: "IX_ExperiencesTeam_TeamId",
+                table: "ExperiencesTeam",
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Mentor_PeopleId",
+                name: "IX_Mentor_PersonId",
                 table: "Mentor",
-                column: "PeopleId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MentorArea_MentorId",
-                table: "MentorArea",
+                name: "IX_MentorsArea_MentorId",
+                table: "MentorsArea",
                 column: "MentorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participants_PeopleId",
+                name: "IX_Participants_PersonId",
                 table: "Participants",
-                column: "PeopleId");
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_People_Document",
+                table: "People",
+                column: "Document",
+                unique: true,
+                filter: "[Document] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_HackatonId",
@@ -297,10 +319,10 @@ namespace backend.Migrations
                 name: "Evaluations");
 
             migrationBuilder.DropTable(
-                name: "ExperienceTeam");
+                name: "ExperiencesTeam");
 
             migrationBuilder.DropTable(
-                name: "MentorArea");
+                name: "MentorsArea");
 
             migrationBuilder.DropTable(
                 name: "TeamMembers");
@@ -319,6 +341,9 @@ namespace backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Teams");
+
+            migrationBuilder.DropTable(
+                name: "People");
         }
     }
 }

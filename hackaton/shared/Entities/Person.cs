@@ -2,7 +2,7 @@
 
 namespace shared.Entities;
 
-public class People
+public class Person
 {
     public int Id { get; set; }
 
@@ -20,14 +20,14 @@ public class People
     public DateTime BirthDate { get; set; }
 
     [Display(Name = "Tipo de documento")]
-    public string TypeDocument { get; set; }
+    public string? TypeDocument { get; set; }
 
     [Display(Name = "Número de documento")]
-    public string Document { get; set; }
+    public string? Document { get; set; }
 
     [Display(Name = "Nombre completo")]
     public string FullName => $"{Name}  {LastName}";
 
-    public ICollection<Participants> Participants { get; set; }
-    public ICollection<Mentor> Mentor { get; set; }
+    public ICollection<Participant>? Participants { get; set; }
+    public ICollection<Mentor>? Mentor { get; set; }
 }

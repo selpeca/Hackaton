@@ -6,8 +6,8 @@ public class Mentor
     public int PersonId { get; set; }
 
     // Relaciones
-    public People People { get; set; }
+    public Person person { get; set; }
 
-    public ICollection<MentorArea> MentorAreas { get; set; }
-    public ICollection<Evaluations> Evaluations { get; set; }
+    public ICollection<MentorArea> MentorsArea { get; set; }
+    public ICollection<Evaluation> Evaluations { get; set; }
 }

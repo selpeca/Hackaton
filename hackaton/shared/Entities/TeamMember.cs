@@ -1,6 +1,6 @@
 ﻿namespace shared.Entities;
 
-public class TeamMembers
+public class TeamMember
 {
     public int Id { get; set; }
     public int ParticipantId { get; set; }
@@ -8,7 +8,7 @@ public class TeamMembers
     public string Role { get; set; }
 
     // Relaciones
-    public Participants Participant { get; set; }
+    public Participant Participant { get; set; }
 
-    public Teams Team { get; set; }
+    public Team Team { get; set; }
 }

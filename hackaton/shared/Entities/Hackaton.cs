@@ -17,7 +17,7 @@ public class Hackaton
     public int OwnerId { get; set; }
 
     // Relaciones
-    public ICollection<Projects> Projects { get; set; }
+    public ICollection<Project> Projects { get; set; }
 
-    public ICollection<Awards> Awards { get; set; }
+    public ICollection<Award> Awards { get; set; }
 }

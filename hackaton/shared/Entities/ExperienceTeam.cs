@@ -8,5 +8,5 @@ public class ExperienceTeam
     public TimeSpan Time { get; set; }
 
     // Relaciones
-    public Teams Team { get; set; }
+    public Team Team { get; set; }
 }

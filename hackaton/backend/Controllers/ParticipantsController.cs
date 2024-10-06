@@ -7,11 +7,11 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PersonController : ControllerBase
+    public class ParticipantsController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public PersonController(DataContext context)
+        public ParticipantsController(DataContext context)
         {
             _context = context;
         }
@@ -19,43 +19,43 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _context.People.ToListAsync());
+            return Ok(await _context.Participants.ToListAsync());
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var person = await _context.People.FindAsync(id);
+            var participants = await _context.Participants.FindAsync(id);
 
-            if (person == null)
+            if (participants == null)
             {
                 return NotFound();
             }
 
-            return Ok(person);
+            return Ok(participants);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(Person person)
+        public async Task<IActionResult> PostAsync(Participant participant)
         {
-            _context.Add(person);
+            _context.Add(participant);
             await _context.SaveChangesAsync();
-            return Ok(person);
+            return Ok(participant);
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutAsync(Person person)
+        public async Task<IActionResult> PutAsync(Participant participant)
         {
-            _context.People.Update(person);
+            _context.Participants.Update(participant);
             await _context.SaveChangesAsync();
-            return Ok(person);
+            return Ok(participant);
         }
 
         // Eliminar un
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            var filasafectadas = await _context.People
+            var filasafectadas = await _context.Participants
                 .Where(x => x.Id == id)
                 .ExecuteDeleteAsync();
             if (filasafectadas == 0)
