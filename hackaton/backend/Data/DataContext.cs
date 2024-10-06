@@ -16,7 +16,7 @@ public class DataContext : DbContext
     public DbSet<ExperienceTeam> ExperiencesTeam { get; set; }
     public DbSet<Hackaton> Hackaton { get; set; }
     public DbSet<MentorArea> MentorsArea { get; set; }
-    public DbSet<Mentor> Mentor { get; set; }
+    public DbSet<Mentor> Mentors { get; set; }
     public DbSet<Participant> Participants { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<Team> Teams { get; set; }

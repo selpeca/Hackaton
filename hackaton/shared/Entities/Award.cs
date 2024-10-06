@@ -2,11 +2,11 @@
 
 public class Award
 {
-    public int Id { get; set; }
-    public int HackatonId { get; set; }
-    public string Position { get; set; }
-    public string Prize { get; set; }
+    public int? Id { get; set; }
+    public int? HackatonId { get; set; }
+    public string? Position { get; set; }
+    public string? Prize { get; set; }
 
     // Relaciones
-    public Hackaton Hackaton { get; set; }
+    public Hackaton? Hackaton { get; set; }
 }

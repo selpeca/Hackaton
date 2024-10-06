@@ -1,22 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Dynamic;
 
 namespace shared.Entities;
 
 public class Team
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     [Display(Name = "Nombre")]
     [MaxLength(100, ErrorMessage = "EL nombre debe ser menor a 100 caracteres")]
     [Required]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [Display(Name = "Numero de miembros")]
-    public int NumMembers { get; set; }
+    public int? NumMembers { get; set; }
+    public int? id_project { get; set; }
 
     // Relaciones
-    public ICollection<TeamMember> TeamMembers { get; set; }
-
-    public ICollection<ExperienceTeam> ExperienceTeams { get; set; }
-    public ICollection<Project> Projects { get; set; }
+    public ICollection<TeamMember>? TeamMembers { get; set; }
+    public ICollection<ExperienceTeam>? ExperienceTeams { get; set; }
+    public ICollection<Project>? Projects { get; set; }
 }

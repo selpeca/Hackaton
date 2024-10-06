@@ -1,4 +1,4 @@
-﻿using backend.Data;
+using backend.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using shared.Entities;
@@ -7,11 +7,11 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PersonController : ControllerBase
+    public class HackatonController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public PersonController(DataContext context)
+        public HackatonController(DataContext context)
         {
             _context = context;
         }
@@ -19,43 +19,42 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _context.People.ToListAsync());
+            return Ok(await _context.Hackaton.ToListAsync());
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var person = await _context.People.FindAsync(id);
+            var hackaton = await _context.Hackaton.FindAsync(id);
 
-            if (person == null)
+            if (hackaton == null)
             {
                 return NotFound();
             }
 
-            return Ok(person);
+            return Ok(hackaton);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(Person person)
+        public async Task<IActionResult> PostAsync(Hackaton hackaton)
         {
-            _context.Add(person);
+            _context.Add(hackaton);
             await _context.SaveChangesAsync();
-            return Ok(person);
+            return Ok(hackaton);
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutAsync(Person person)
+        public async Task<IActionResult> PutAsync(Hackaton hackaton)
         {
-            _context.People.Update(person);
+            _context.Hackaton.Update(hackaton);
             await _context.SaveChangesAsync();
-            return Ok(person);
+            return Ok(hackaton);
         }
 
-        // Eliminar un
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            var filasafectadas = await _context.People
+            var filasafectadas = await _context.Hackaton
                 .Where(x => x.Id == id)
                 .ExecuteDeleteAsync();
             if (filasafectadas == 0)

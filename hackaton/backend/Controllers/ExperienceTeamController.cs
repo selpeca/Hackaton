@@ -1,17 +1,16 @@
-﻿using backend.Data;
+using backend.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using shared.Entities;
 
-namespace backend.Controllers
-{
+namespace backend.Controllers{
     [ApiController]
     [Route("api/[controller]")]
-    public class ParticipantsController : ControllerBase
+    public class ExperienceTeamController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public ParticipantsController(DataContext context)
+        public ExperienceTeamController(DataContext context)
         {
             _context = context;
         }
@@ -19,43 +18,42 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _context.Participants.ToListAsync());
+            return Ok(await _context.ExperiencesTeam.ToListAsync());
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var participants = await _context.Participants.FindAsync(id);
+            var experienceTeam = await _context.ExperiencesTeam.FindAsync(id);
 
-            if (participants == null)
+            if (experienceTeam == null)
             {
                 return NotFound();
             }
 
-            return Ok(participants);
+            return Ok(experienceTeam);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(Participant participant)
+        public async Task<IActionResult> PostAsync(ExperienceTeam experienceTeam)
         {
-            _context.Add(participant);
+            _context.Add(experienceTeam);
             await _context.SaveChangesAsync();
-            return Ok(participant);
+            return Ok(experienceTeam);
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutAsync(Participant participant)
+        public async Task<IActionResult> PutAsync(ExperienceTeam experienceTeam)
         {
-            _context.Participants.Update(participant);
+            _context.ExperiencesTeam.Update(experienceTeam);
             await _context.SaveChangesAsync();
-            return Ok(participant);
+            return Ok(experienceTeam);
         }
-
-        // Eliminar un
+        
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            var filasafectadas = await _context.Participants
+            var filasafectadas = await _context.ExperiencesTeam
                 .Where(x => x.Id == id)
                 .ExecuteDeleteAsync();
             if (filasafectadas == 0)
