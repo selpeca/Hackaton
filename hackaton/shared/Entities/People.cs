@@ -29,5 +29,5 @@ public class People
     public string FullName => $"{Name}  {LastName}";
 
     public ICollection<Participants> Participants { get; set; }
-    public ICollection<Mentors> Mentors { get; set; }
+    public ICollection<Mentor> Mentor { get; set; }
 }

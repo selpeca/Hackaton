@@ -10,6 +10,16 @@ public class DataContext : DbContext
     }
 
     public DbSet<People> People { get; set; }
+    public DbSet<TeamMembers> TeamMembers { get; set; }
+    public DbSet<Awards> Awards { get; set; }
+    public DbSet<Evaluations> Evaluations { get; set; }
+    public DbSet<ExperienceTeam> ExperienceTeam { get; set; }
+    public DbSet<Hackaton> Hackaton { get; set; }
+    public DbSet<MentorArea> MentorArea { get; set; }
+    public DbSet<Mentor> Mentor { get; set; }
+    public DbSet<Participants> Participants { get; set; }
+    public DbSet<Projects> Projects { get; set; }
+    public DbSet<Teams> Teams { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

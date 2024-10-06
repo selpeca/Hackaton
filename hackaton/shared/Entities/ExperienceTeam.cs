@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace shared.Entities;
+﻿namespace shared.Entities;
 
 public class ExperienceTeam
 {

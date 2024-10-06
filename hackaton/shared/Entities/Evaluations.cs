@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace shared.Entities;
+﻿namespace shared.Entities;
 
 public class Evaluations
 {
@@ -12,7 +10,7 @@ public class Evaluations
     public string Comments { get; set; }
 
     // Relaciones
-    public Mentors Mentor { get; set; }
+    public Mentor Mentor { get; set; }
 
     public Projects Project { get; set; }
 }

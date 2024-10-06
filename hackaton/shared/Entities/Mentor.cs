@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace shared.Entities;
 
-namespace shared.Entities;
-
-public class Mentors
+public class Mentor
 {
     public int Id { get; set; }
     public int PersonId { get; set; }

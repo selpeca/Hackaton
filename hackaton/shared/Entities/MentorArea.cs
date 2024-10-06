@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace shared.Entities;
+﻿namespace shared.Entities;
 
 public class MentorArea
 {
@@ -9,5 +7,5 @@ public class MentorArea
     public string Area { get; set; }
 
     // Relaciones
-    public Mentors Mentor { get; set; }
+    public Mentor Mentor { get; set; }
 }
