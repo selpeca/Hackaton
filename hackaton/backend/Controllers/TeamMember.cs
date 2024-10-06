@@ -22,6 +22,12 @@ public class TeamMemberController : ControllerBase
         return Ok(await _context.TeamMembers.ToListAsync());
     }
 
+    [HttpGet("ByTeamId/{idTeam:int}")]
+    public async Task<IActionResult> GetAsyncById(int idTeam)
+    {
+        return Ok(await _context.TeamMembers.Where(x => x.teamId == idTeam).ToListAsync());
+    }
+
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetAsync(int id)
     {
@@ -55,7 +61,7 @@ public class TeamMemberController : ControllerBase
     public async Task<ActionResult> DeleteAsync(int id)
     {
         var filasafectadas = await _context.TeamMembers
-            .Where(x => x.Id == id)
+            .Where(x => x.id == id)
             .ExecuteDeleteAsync();
         if (filasafectadas == 0)
         {

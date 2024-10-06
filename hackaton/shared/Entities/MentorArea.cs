@@ -1,11 +1,19 @@
-﻿namespace shared.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace shared.Entities;
 
 public class MentorArea
 {
-    public int? Id { get; set; }
-    public int? MentorId { get; set; }
-    public string? Area { get; set; }
+    public int id { get; set; }
+
+    [Display(Name = "Area")]
+    [MaxLength(100, ErrorMessage = "El nombre del area debe ser menor a 100 caracteres")]
+    [Required]
+    public string area { get; set; }
 
     // Relaciones
-    public Mentor? Mentor { get; set; }
+    [JsonIgnore]
+    public Mentor mentor { get; set; }
+    public int mentorId { get; set; }
 }

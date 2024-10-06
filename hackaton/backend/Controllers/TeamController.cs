@@ -55,7 +55,7 @@ public class TeamController : ControllerBase
     public async Task<ActionResult> DeleteAsync(int id)
     {
         var filasafectadas = await _context.Teams
-            .Where(x => x.Id == id)
+            .Where(x => x.id == id)
             .ExecuteDeleteAsync();
         if (filasafectadas == 0)
         {

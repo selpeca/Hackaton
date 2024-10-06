@@ -1,12 +1,22 @@
-﻿namespace shared.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace shared.Entities;
 
 public class ExperienceTeam
 {
-    public int? Id { get; set; }
-    public int? TeamId { get; set; }
-    public string? Description { get; set; }
-    public TimeSpan? Time { get; set; }
+    public int? id { get; set; }
+
+    [Display(Name = "Descripción de experiencia")]
+    [Required]
+    public string? description { get; set; }
+
+    [Display(Name = "Tiempo de experiencia")]
+    [Required]
+    public int? time { get; set; }
 
     // Relaciones
-    public Team? Team { get; set; }
+    [JsonIgnore]
+    public Team? team { get; set; }
+    public int? teamId { get; set; }
 }

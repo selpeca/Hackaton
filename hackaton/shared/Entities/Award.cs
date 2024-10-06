@@ -1,12 +1,24 @@
-﻿namespace shared.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace shared.Entities;
 
 public class Award
 {
-    public int? Id { get; set; }
-    public int? HackatonId { get; set; }
-    public string? Position { get; set; }
-    public string? Prize { get; set; }
+    public int? id { get; set; }
+
+    [Display(Name = "Posición")]
+    [Required]
+    public int? position { get; set; }
+
+    [Display(Name = "Premio")]
+    [Required]
+    public string? prize { get; set; }
+    
 
     // Relaciones
-    public Hackaton? Hackaton { get; set; }
+    [JsonIgnore]
+    public Hackaton? hackaton { get; set; }
+    public int? hackatonId { get; set; }
+
 }

@@ -6,28 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class fixmigrations : Migration
+    public partial class all : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Hackaton",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Subject = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OwnerId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Hackaton", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "People",
                 columns: table => new
@@ -60,28 +43,30 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Awards",
+                name: "Hackaton",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    HackatonId = table.Column<int>(type: "int", nullable: false),
-                    Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Prize = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Subject = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OwnerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Awards", x => x.Id);
+                    table.PrimaryKey("PK_Hackaton", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Awards_Hackaton_HackatonId",
-                        column: x => x.HackatonId,
-                        principalTable: "Hackaton",
+                        name: "FK_Hackaton_People_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mentor",
+                name: "Mentors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -90,9 +75,9 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mentor", x => x.Id);
+                    table.PrimaryKey("PK_Mentors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Mentor_People_PersonId",
+                        name: "FK_Mentors_People_PersonId",
                         column: x => x.PersonId,
                         principalTable: "People",
                         principalColumn: "Id",
@@ -105,7 +90,7 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Profession = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Profession = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     PersonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -125,9 +110,9 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TeamId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Time = table.Column<TimeSpan>(type: "time", nullable: false)
+                    Time = table.Column<int>(type: "int", nullable: false),
+                    TeamId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,17 +126,38 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Awards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Position = table.Column<int>(type: "int", nullable: false),
+                    Prize = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HackatonId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Awards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Awards_Hackaton_HackatonId",
+                        column: x => x.HackatonId,
+                        principalTable: "Hackaton",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TeamId = table.Column<int>(type: "int", nullable: false),
-                    HackatonId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TeamId = table.Column<int>(type: "int", nullable: false),
+                    HackatonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,16 +182,16 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MentorId = table.Column<int>(type: "int", nullable: false),
-                    Area = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Area = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    MentorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MentorsArea", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MentorsArea_Mentor_MentorId",
+                        name: "FK_MentorsArea_Mentors_MentorId",
                         column: x => x.MentorId,
-                        principalTable: "Mentor",
+                        principalTable: "Mentors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -196,9 +202,9 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ParticipantId = table.Column<int>(type: "int", nullable: false),
-                    TeamId = table.Column<int>(type: "int", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    TeamId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -223,27 +229,27 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MentorId = table.Column<int>(type: "int", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
                     Judgment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Score = table.Column<int>(type: "int", nullable: false),
-                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MentorId = table.Column<int>(type: "int", nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Evaluations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Evaluations_Mentor_MentorId",
+                        name: "FK_Evaluations_Mentors_MentorId",
                         column: x => x.MentorId,
-                        principalTable: "Mentor",
+                        principalTable: "Mentors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Evaluations_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
@@ -267,8 +273,13 @@ namespace backend.Migrations
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Mentor_PersonId",
-                table: "Mentor",
+                name: "IX_Hackaton_OwnerId",
+                table: "Hackaton",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mentors_PersonId",
+                table: "Mentors",
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
@@ -331,7 +342,7 @@ namespace backend.Migrations
                 name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Mentor");
+                name: "Mentors");
 
             migrationBuilder.DropTable(
                 name: "Participants");

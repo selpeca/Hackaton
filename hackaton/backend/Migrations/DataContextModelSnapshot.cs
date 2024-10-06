@@ -33,9 +33,8 @@ namespace backend.Migrations
                     b.Property<int>("HackatonId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
 
                     b.Property<string>("Prize")
                         .IsRequired()
@@ -96,8 +95,8 @@ namespace backend.Migrations
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
+                    b.Property<int>("Time")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -134,6 +133,8 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OwnerId");
+
                     b.ToTable("Hackaton");
                 });
 
@@ -152,7 +153,7 @@ namespace backend.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Mentor");
+                    b.ToTable("Mentors");
                 });
 
             modelBuilder.Entity("shared.Entities.MentorArea", b =>
@@ -165,7 +166,8 @@ namespace backend.Migrations
 
                     b.Property<string>("Area")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("MentorId")
                         .HasColumnType("int");
@@ -190,8 +192,8 @@ namespace backend.Migrations
 
                     b.Property<string>("Profession")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -248,7 +250,6 @@ namespace backend.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("HackatonId")
@@ -362,6 +363,17 @@ namespace backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("shared.Entities.Hackaton", b =>
+                {
+                    b.HasOne("shared.Entities.Person", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("shared.Entities.Mentor", b =>

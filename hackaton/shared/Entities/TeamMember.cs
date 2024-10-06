@@ -1,14 +1,22 @@
-﻿namespace shared.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace shared.Entities;
 
 public class TeamMember
 {
-    public int? Id { get; set; }
-    public int? ParticipantId { get; set; }
-    public int? TeamId { get; set; }
-    public string? Role { get; set; }
+    public int? id { get; set; }
+
+    [Display(Name = "Rol")]
+    [Required]
+    public string? role { get; set; }
 
     // Relaciones
-    public Participant? Participant { get; set; }
+    [JsonIgnore]
+    public Participant? participant { get; set; }
+    public int? participantId { get; set; }
 
-    public Team? Team { get; set; }
+    [JsonIgnore]
+    public Team? team { get; set; }
+    public int? teamId { get; set; }
 }

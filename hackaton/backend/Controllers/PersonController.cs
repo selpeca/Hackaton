@@ -55,7 +55,7 @@ namespace backend.Controllers
         public async Task<ActionResult> DeleteAsync(int id)
         {
             var filasafectadas = await _context.People
-                .Where(x => x.Id == id)
+                .Where(x => x.id == id)
                 .ExecuteDeleteAsync();
             if (filasafectadas == 0)
             {

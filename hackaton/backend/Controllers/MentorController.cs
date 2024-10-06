@@ -22,6 +22,12 @@ namespace backend.Controllers
             return Ok(await _context.Mentors.ToListAsync());
         }
 
+        [HttpGet("ByPersonId/{idPerson:int}")]
+        public async Task<IActionResult> GetAsyncById(int idPerson)
+        {
+            return Ok(await _context.Mentors.Where(x => x.personId == idPerson).ToListAsync());
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAsync(int id)
         {
@@ -55,7 +61,7 @@ namespace backend.Controllers
         public async Task<ActionResult> DeleteAsync(int id)
         {
             var filasafectadas = await _context.Mentors
-                .Where(x => x.Id == id)
+                .Where(x => x.id == id)
                 .ExecuteDeleteAsync();
             if (filasafectadas == 0)
             {

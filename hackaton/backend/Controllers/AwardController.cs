@@ -22,6 +22,13 @@ namespace backend.Controllers
             return Ok(await _context.Awards.ToListAsync());
         }
 
+        [HttpGet("ByHackatonId/{hackatonId:int}")]
+        public async Task<IActionResult> GetAsyncById(int hackatonId)
+        {
+            return Ok(await _context.Awards.Where(x => x.hackatonId == hackatonId).ToListAsync());
+        }
+
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAsync(int id)
         {
@@ -50,12 +57,12 @@ namespace backend.Controllers
             await _context.SaveChangesAsync();
             return Ok(award);
         }
-        
+
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
             var filasafectadas = await _context.Awards
-                .Where(x => x.Id == id)
+                .Where(x => x.id == id)
                 .ExecuteDeleteAsync();
             if (filasafectadas == 0)
             {
