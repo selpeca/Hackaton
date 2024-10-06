@@ -10,4 +10,10 @@ public class DataContext : DbContext
     }
 
     public DbSet<People> People { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<People>().HasIndex(x => x.Document).IsUnique();
+    }
 }
