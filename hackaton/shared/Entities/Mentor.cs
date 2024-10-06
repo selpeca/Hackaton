@@ -1,13 +1,20 @@
-﻿namespace shared.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace shared.Entities;
 
 public class Mentor
 {
     public int Id { get; set; }
-    public int PersonId { get; set; }
 
     // Relaciones
+    [JsonIgnore]
     public Person person { get; set; }
 
+    public int PersonId { get; set; }
+
+    [JsonIgnore]
     public ICollection<MentorArea> MentorsArea { get; set; }
+
+    [JsonIgnore]
     public ICollection<Evaluation> Evaluations { get; set; }
 }

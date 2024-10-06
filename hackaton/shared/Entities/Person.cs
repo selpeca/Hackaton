@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace shared.Entities;
 
@@ -17,6 +18,7 @@ public class Person
     public string LastName { get; set; }
 
     [Display(Name = "Fecha de nacimiento")]
+    [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
     public DateTime BirthDate { get; set; }
 
     [Display(Name = "Tipo de documento")]
@@ -28,6 +30,9 @@ public class Person
     [Display(Name = "Nombre completo")]
     public string FullName => $"{Name}  {LastName}";
 
+    [JsonIgnore]
     public ICollection<Participant>? Participants { get; set; }
+
+    [JsonIgnore]
     public ICollection<Mentor>? Mentor { get; set; }
 }
