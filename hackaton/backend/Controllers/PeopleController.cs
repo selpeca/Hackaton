@@ -53,19 +53,16 @@ namespace backend.Controllers
 
         // Eliminar un
         [HttpDelete("{id:int}")]
-
         public async Task<ActionResult> DeleteAsync(int id)
         {
             var filasafectadas = await _context.People
                 .Where(x => x.Id == id)
                 .ExecuteDeleteAsync();
-
             if (filasafectadas == 0)
             {
                 return NotFound();
             }
             return NoContent();
         }
-
     }
 }

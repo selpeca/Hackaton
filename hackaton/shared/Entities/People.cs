@@ -27,4 +27,7 @@ public class People
 
     [Display(Name = "Nombre completo")]
     public string FullName => $"{Name}  {LastName}";
+
+    public ICollection<Participants> Participants { get; set; }
+    public ICollection<Mentors> Mentors { get; set; }
 }
