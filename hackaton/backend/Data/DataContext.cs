@@ -13,7 +13,7 @@ public class DataContext : DbContext
     public DbSet<TeamMember> TeamMembers { get; set; }
     public DbSet<Award> Awards { get; set; }
     public DbSet<Evaluation> Evaluations { get; set; }
-    public DbSet<ExperienceTeam> ExperiencesTeam { get; set; }
+    public DbSet<ExperienceParticipant> ExperiencesParticipant { get; set; }
     public DbSet<Hackaton> Hackaton { get; set; }
     public DbSet<MentorArea> MentorsArea { get; set; }
     public DbSet<Mentor> Mentors { get; set; }
@@ -24,6 +24,6 @@ public class DataContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<Person>().HasIndex(x => x.Document).IsUnique();
+        modelBuilder.Entity<Person>().HasIndex(x => x.document).IsUnique();
     }
 }

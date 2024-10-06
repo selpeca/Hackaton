@@ -23,9 +23,9 @@ public class SeedDb
     {
         if (!_context.People.Any())
         {
-            _context.People.Add(new Person { Name = "Sergio", LastName = "Pérez", BirthDate = new DateTime(1997, 6, 30) });
-            _context.People.Add(new Person { Name = "Juan José", LastName = "Santana", BirthDate = new DateTime(2000, 5, 4) });
-            _context.People.Add(new Person { Name = "Nestor", LastName = "Restrepo", BirthDate = new DateTime(1994, 10, 14) });
+            _context.People.Add(new Person { name = "Sergio", lastName = "Pérez", birthDate = new DateTime(1997, 6, 30) });
+            _context.People.Add(new Person { name = "Juan José", lastName = "Santana", birthDate = new DateTime(2001, 5, 10) });
+            _context.People.Add(new Person { name = "Nestor", lastName = "Restrepo", birthDate = new DateTime(1994, 10, 14) });
         }
 
         await _context.SaveChangesAsync();

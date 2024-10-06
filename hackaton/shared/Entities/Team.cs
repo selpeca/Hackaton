@@ -18,10 +18,7 @@ public class Team
     // Relaciones
     [JsonIgnore]
     public ICollection<TeamMember>? teamMembers { get; set; }
-
-    [JsonIgnore]
-    public ICollection<ExperienceTeam>? experienceTeams { get; set; }
-
+    
     [JsonIgnore]
     public ICollection<Project>? projects { get; set; }
 }

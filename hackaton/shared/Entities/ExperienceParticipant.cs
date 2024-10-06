@@ -3,9 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace shared.Entities;
 
-public class ExperienceTeam
+public class ExperienceParticipant
 {
     public int? id { get; set; }
+
+    public string? area { get; set; }
 
     [Display(Name = "Descripción de experiencia")]
     [Required]
@@ -17,6 +19,6 @@ public class ExperienceTeam
 
     // Relaciones
     [JsonIgnore]
-    public Team? team { get; set; }
-    public int? teamId { get; set; }
+    public Participant? participant { get; set; }
+    public int? participantId { get; set; }
 }

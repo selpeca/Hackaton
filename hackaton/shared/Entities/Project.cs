@@ -16,7 +16,7 @@ public class Project
     public string? description { get; set; }
 
     [Display(Name = "Estado")]
-    public string status { get; set; } // por iniciar, en progreso, finalizado
+    public string? status { get; set; } // por iniciar, en progreso, finalizado
 
     [Display(Name = "Fecha de entrega")]
     [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]

@@ -12,7 +12,12 @@ public class Participant
     [Required]
     public string? profession { get; set; }
 
+    //relaciones
+
     [JsonIgnore]
     public Person? person { get; set; }
     public int? personId { get; set; }
+
+    [JsonIgnore]
+    public ICollection<ExperienceParticipant>? ExperiencesParticipant { get; set; }
 }
