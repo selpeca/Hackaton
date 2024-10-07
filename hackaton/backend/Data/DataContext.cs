@@ -21,6 +21,8 @@ public class DataContext : DbContext
     public DbSet<Project> Projects { get; set; }
     public DbSet<Team> Teams { get; set; }
 
+
+    //Configuración del módelo de datos
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
