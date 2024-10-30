@@ -13,4 +13,5 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 
 builder.Services.AddScoped<IRepository, Repository>();
 
+
 await builder.Build().RunAsync();
