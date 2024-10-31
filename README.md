@@ -1,5 +1,5 @@
 # Hackaton
-Repositorio en respuesta a la actividad 2 de contrucción de software para la especialización en ingeniería de software
+Repositorio en respuesta a la actividad final para la materia contrucción de software de la especialización en ingeniería de software
 - Juan Jose Santana
 - Sergio Pérez
 - Nestor Restrepo
