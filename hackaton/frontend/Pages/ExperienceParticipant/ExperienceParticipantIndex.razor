@@ -1,0 +1,82 @@
+@page "/experienceparticipant"
+@using Hackaton.frontend.Repositories
+@using shared.Entities
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>Experiencias de Participantes</h3>
+<div class="mb-3">
+    <a href="/experienceparticipant/create" class="btn btn-primary">Crear Experiencia</a>
+</div>
+
+<GenericList MyList="ExperienceParticipants">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Área</th>
+                    <th>Descripción</th>
+                    <th>Tiempo (meses)</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ExperienceParticipants)
+                {
+                    <tr>
+                        <td>@item.area</td>
+                        <td>@item.description</td>
+                        <td>@item.time</td>
+                        <td>
+                            <a href="experienceparticipant/edit/@item.id" class="btn btn-sm btn-outline-warning">Editar</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="@(() => DeleteAsync(item))">Eliminar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<ExperienceParticipant>? ExperienceParticipants { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHttp = await repository.GetAsync<List<ExperienceParticipant>>("/api/experienceparticipant");
+        ExperienceParticipants = responseHttp.Response;
+    }
+
+    private async Task DeleteAsync(ExperienceParticipant experienceParticipant)
+    {
+        var result = await swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Confirmación",
+            Text = "¿Estás seguro de que quieres borrar esta experiencia?",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true
+        });
+
+        if (string.IsNullOrEmpty(result.Value))
+            return;
+
+        var responseHTTP = await repository.DeleteAsync($"api/experienceparticipant/{experienceParticipant.id}");
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            await Load();
+        }
+    }
+}

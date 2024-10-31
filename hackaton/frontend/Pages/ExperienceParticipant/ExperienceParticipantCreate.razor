@@ -1,0 +1,32 @@
+@using shared.Entities
+@page "/experienceparticipant/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear Experiencia de Participante</h3>
+
+<ExperienceParticipantForm @ref="experienceParticipantForm" ExperienceParticipant="ExperienceParticipant" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    public ExperienceParticipant ExperienceParticipant = new();
+    public ExperienceParticipantForm? experienceParticipantForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/experienceparticipant", ExperienceParticipant);
+        if (responseHttp.Error)
+        {
+            var mensaje = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", mensaje);
+            return;
+        }
+        navigationManager.NavigateTo("/experienceparticipant");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/experienceparticipant");
+    }
+}

@@ -1,0 +1,80 @@
+@page "/team"
+@using Hackaton.frontend.Repositories
+@using shared.Entities
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>Lista de Equipos</h3>
+<div class="mb-3">
+    <a href="/team/create" class="btn btn-primary">Crear Equipo</a>
+</div>
+
+<GenericList MyList="Teams">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Número de Miembros</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Teams)
+                {
+                    <tr>
+                        <td>@item.name</td>
+                        <td>@item.numMembers</td>
+                        <td>
+                            <a href="team/edit/@item.id" class="btn btn-sm btn-outline-warning">Editar</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="@(() => DeleteAsync(item))">Eliminar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Team>? Teams { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHttp = await repository.GetAsync<List<Team>>("/api/team");
+        Teams = responseHttp.Response;
+    }
+
+    private async Task DeleteAsync(Team team)
+    {
+        var result = await swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Confirmación",
+            Text = "¿Estás seguro de que quieres borrar este equipo?",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true
+        });
+
+        if (string.IsNullOrEmpty(result.Value))
+            return;
+
+        var responseHTTP = await repository.DeleteAsync($"api/team/{team.id}");
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            await Load();
+        }
+    }
+}
