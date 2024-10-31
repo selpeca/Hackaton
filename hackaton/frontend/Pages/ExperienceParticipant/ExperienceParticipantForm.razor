@@ -1,0 +1,45 @@
+@using shared.Entities
+<EditForm Model="ExperienceParticipant" OnSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>Área</label>
+        <div>
+            <InputText @bind-Value="ExperienceParticipant.area" class="form-control" />
+            <ValidationMessage For="@(() => ExperienceParticipant.area)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Descripción de Experiencia</label>
+        <div>
+            <InputText @bind-Value="ExperienceParticipant.description" class="form-control" required />
+            <ValidationMessage For="@(() => ExperienceParticipant.description)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Tiempo de Experiencia (en meses)</label>
+        <div>
+            <InputNumber @bind-Value="ExperienceParticipant.time" class="form-control" required />
+            <ValidationMessage For="@(() => ExperienceParticipant.time)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-dark" @onclick="() => ReturnAction.InvokeAsync(null)">Regresar</button>
+</EditForm>
+
+@code {
+    [EditorRequired]
+    [Parameter]
+    public ExperienceParticipant ExperienceParticipant { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+}

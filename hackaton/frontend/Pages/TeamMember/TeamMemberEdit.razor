@@ -1,0 +1,67 @@
+@using shared.Entities
+@page "/teammember/edit/{id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+<h3>Editar Miembro de Equipo</h3>
+
+@if (TeamMember is null)
+{
+    <Loading/>
+}
+else
+{
+    <TeamMemberForm @ref="TeamMemberForm" TeamMember="TeamMember" OnSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private TeamMember TeamMember;
+    private TeamMemberForm TeamMemberForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHTTP = await repository.GetAsync<TeamMember>($"/api/teammember/{Id}");
+
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/teammember");
+            }
+            else
+            {
+                var messageError = await responseHTTP.GetErrorMessageAsync();
+                await swal.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            TeamMember = responseHTTP.Response;
+        }
+    }
+
+    private async Task Edit()
+    {
+        var responseHTTP = await repository.PutAsync("/api/teammember", TeamMember);
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            navigationManager.NavigateTo("/teammember");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/teammember");
+    }
+}

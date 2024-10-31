@@ -1,0 +1,32 @@
+@using shared.Entities
+@page "/teammember/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear Miembro de Equipo</h3>
+
+<TeamMemberForm @ref="teamMemberForm" TeamMember="TeamMember" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    public TeamMember TeamMember = new();
+    public TeamMemberForm? teamMemberForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/teammember", TeamMember);
+        if (responseHttp.Error)
+        {
+            var mensaje = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", mensaje);
+            return;
+        }
+        navigationManager.NavigateTo("/teammember");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/teammember");
+    }
+}
