@@ -1,0 +1,68 @@
+﻿@using shared.Entities
+
+@page "/award/edit/{id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+<h3>Editar Award</h3>
+
+@if (Award is null)
+{
+    <Loading/>
+}
+else
+{
+    <AwardForm @ref="AwardForm" Award="Award" OnSubmit="Edit" ReturnAction="@Return" />
+}
+
+@code {
+    private Award Award;
+    private AwardForm AwardForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHTTP = await repository.GetAsync<Award>($"/api/award/{Id}");
+
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("award");
+            }
+            else
+            {
+                var messageError = "await responseHTTP.GetErrorMessageAsync()";
+                await swal.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            Award = responseHTTP.Response;
+        }
+    }
+
+    private async Task Edit()
+    {
+        var responseHTTP = await repository.PutAsync("/api/award", Award);
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = "await responseHTTP.GetErrorMessageAsync()";
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+          
+            navigationManager.NavigateTo("/award");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/award");
+    }
+}

@@ -1,27 +1,27 @@
 ﻿@using shared.Entities
-@page "/person/create"
+@page "/award/create"
 
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
-<h3>Person Create</h3>
+<h3>Crear premio</h3>
 
-<PersonForm @ref="personForm" Person="Person" OnSubmit="Create"/>
+<AwardForm @ref="awardForm" Award="Award" OnSubmit="Create"/>
 
 @code {
-    public Person Person = new();
-    public PersonForm? personForm;
+    public Award Award = new();
+    public AwardForm? awardForm;
 
     private async Task Create()
     {
-        var responseHttp = await repository.PostAsync("/api/person", Person);
+        var responseHttp = await repository.PostAsync("/api/award", Award);
         if (responseHttp.Error)
         {
             var mensaje = await responseHttp.GetErrorMessageAsync();
             await sweetAlertService.FireAsync("Error", mensaje);
             return;
         }
-        navigationManager.NavigateTo("/person");
+        navigationManager.NavigateTo("/award");
 
     }
 }
