@@ -1,4 +1,5 @@
 @using shared.Entities
+@inject IRepository repository
 <EditForm Model="TeamMember" OnSubmit="OnSubmit">
     <DataAnnotationsValidator />
 
@@ -12,17 +13,33 @@
 
     <!-- Campos de relaciones -->
     <div class="mb-3">
-        <label>ID de Participante</label>
+        <label>Participante</label>
         <div>
-            <InputNumber @bind-Value="TeamMember.participantId" class="form-control" />
+            <InputSelect @bind-Value="TeamMember.participantId" class="form-control" required>
+                @if (Participants != null)
+                {
+                    @foreach (var item in Participants)
+                    {
+                        <option value="@item.id">@item.person.fullName</option>
+                    }
+                }
+            </InputSelect>
             <ValidationMessage For="@(() => TeamMember.participantId)" />
         </div>
     </div>
 
     <div class="mb-3">
-        <label>ID de Equipo</label>
+        <label>Equipo</label>
         <div>
-            <InputNumber @bind-Value="TeamMember.teamId" class="form-control" />
+            <InputSelect @bind-Value="TeamMember.teamId" class="form-control" required>
+                @if (Teams != null)
+                {
+                    @foreach (var item in Teams)
+                    {
+                        <option value="@item.id">@item.name</option>
+                    }
+                }
+            </InputSelect>
             <ValidationMessage For="@(() => TeamMember.teamId)" />
         </div>
     </div>
@@ -32,6 +49,29 @@
 </EditForm>
 
 @code {
+    public List<Participant>? Participants { get; set; }
+    public List<Team>? Teams { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHppt = await repository.GetAsync<List<Participant>>("/api/participant");
+        Participants = responseHppt.Response!;
+        if (TeamMember.participantId == null)
+        {
+            TeamMember.participantId = Participants.First().id;
+        }
+        var responseHppt2 = await repository.GetAsync<List<Team>>("/api/team");
+        Teams = responseHppt2.Response!;
+        if (TeamMember.teamId == null)
+        {
+            TeamMember.teamId = Teams.First().id;
+        }
+    }
     [EditorRequired]
     [Parameter]
     public TeamMember TeamMember { get; set; }

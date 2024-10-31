@@ -16,6 +16,8 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>Participante</th>
+                    <th>Equipo</th>
                     <th>Rol</th>
                     <th>Acciones</th>
                 </tr>
@@ -24,6 +26,8 @@
                 @foreach (var item in TeamMembers)
                 {
                     <tr>
+                        <td>@item.participant.person.fullName</td>
+                        <td>@item.team.name</td>
                         <td>@item.role</td>
                         <td>
                             <a href="teammember/edit/@item.id" class="btn btn-sm btn-outline-warning">Editar</a>

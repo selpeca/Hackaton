@@ -42,7 +42,10 @@
     {
         var responseHppt = await repository.GetAsync<List<Person>>("/api/person");
         Persons = responseHppt.Response!;
-        Participant.personId = Persons.First().id;
+        if (Participant.personId == null)
+        {
+            Participant.personId = Persons.First().id;
+        }
     }
     [EditorRequired]
     [Parameter]
