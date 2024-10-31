@@ -1,0 +1,37 @@
+@using shared.Entities
+<EditForm Model="Participant" OnSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Profesión</label>
+        <div>
+            <InputText @bind-Value="Participant.profession" class="form-control" required />
+            <ValidationMessage For="@(() => Participant.profession)" />
+        </div>
+    </div>
+    
+    <!-- Campo de relación con Person -->
+    <div class="mb-3">
+        <label>Id de Persona</label>
+        <div>
+            <InputNumber @bind-Value="Participant.personId" class="form-control" />
+            <ValidationMessage For="@(() => Participant.personId)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-dark" @onclick="() => ReturnAction.InvokeAsync(null)">Regresar</button>
+</EditForm>
+
+@code {
+    [EditorRequired]
+    [Parameter]
+    public Participant Participant { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+}

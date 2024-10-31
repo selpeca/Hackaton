@@ -1,0 +1,78 @@
+@page "/participant"
+@using Hackaton.frontend.Repositories
+@using shared.Entities
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>Lista de Participantes</h3>
+<div class="mb-3">
+    <a href="/participant/create" class="btn btn-primary">Crear Participante</a>
+</div>
+
+<GenericList MyList="Participants">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Profesión</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Participants)
+                {
+                    <tr>
+                        <td>@item.profession</td>
+                        <td>
+                            <a href="participant/edit/@item.id" class="btn btn-sm btn-outline-warning">Editar</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="@(() => DeleteAsync(item))">Eliminar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Participant>? Participants { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHttp = await repository.GetAsync<List<Participant>>("/api/participant");
+        Participants = responseHttp.Response;
+    }
+
+    private async Task DeleteAsync(Participant participant)
+    {
+        var result = await swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Confirmación",
+            Text = "¿Estás seguro de que quieres borrar este participante?",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true
+        });
+
+        if (string.IsNullOrEmpty(result.Value))
+            return;
+
+        var responseHTTP = await repository.DeleteAsync($"api/participant/{participant.id}");
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            await Load();
+        }
+    }
+}
