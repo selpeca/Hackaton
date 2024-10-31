@@ -1,0 +1,49 @@
+﻿@page "/person"
+@using Hackaton.frontend.Repositories
+@using shared.Entities
+
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+<h3>PersonIndex</h3>
+<div class="mb-3">
+    <a href="/person/create" class="btn btn-primary">Crear persona</a>  
+</div>
+
+<GenericList MyList="Persons">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Personas</th>
+                    <th>...</th>
+                </tr>
+            </thead>
+            <tbody>
+                    @foreach (var item in Persons){
+                        <tr>
+                            <td>@item.fullName</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-outline-warning">Editar</a>
+                                <button href="#" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+@code {
+    public List<Person>? Persons { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHppt = await repository.GetAsync<List<Person>>("/api/person");
+        Person = responseHppt.Response!;
+    }
+}
