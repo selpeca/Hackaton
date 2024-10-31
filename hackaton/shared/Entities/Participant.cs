@@ -14,8 +14,8 @@ public class Participant
 
     //relaciones
 
-    [JsonIgnore]
     public Person? person { get; set; }
+
     public int? personId { get; set; }
 
     [JsonIgnore]

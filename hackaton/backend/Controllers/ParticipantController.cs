@@ -19,7 +19,7 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _context.Participants.ToListAsync());
+            return Ok(await _context.Participants.Include(x => x.person).ToListAsync());
         }
 
         [HttpGet("ByPersonId/{idPerson:int}")]
