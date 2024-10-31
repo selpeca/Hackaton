@@ -16,6 +16,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>Persona</th>
                     <th>Profesión</th>
                     <th>Acciones</th>
                 </tr>
@@ -24,6 +25,7 @@
                 @foreach (var item in Participants)
                 {
                     <tr>
+                        <td>@item.person.fullName</td>
                         <td>@item.profession</td>
                         <td>
                             <a href="participant/edit/@item.id" class="btn btn-sm btn-outline-warning">Editar</a>

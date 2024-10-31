@@ -19,7 +19,7 @@ public class TeamMemberController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAsync()
     {
-        return Ok(await _context.TeamMembers.ToListAsync());
+        return Ok(await _context.TeamMembers.Include(x => x.team).Include(x => x.participant.person).ToListAsync());
     }
 
     [HttpGet("ByTeamId/{idTeam:int}")]

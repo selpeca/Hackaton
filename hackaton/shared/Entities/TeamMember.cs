@@ -12,11 +12,9 @@ public class TeamMember
     public string? role { get; set; }
 
     // Relaciones
-    [JsonIgnore]
     public Participant? participant { get; set; }
     public int? participantId { get; set; }
 
-    [JsonIgnore]
     public Team? team { get; set; }
     public int? teamId { get; set; }
 }

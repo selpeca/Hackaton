@@ -29,7 +29,9 @@
             <InputSelect @bind-Value="Person.typeDocument" class="form-control" required>
                 <option value="CC">Cédula de ciudadanía</option>
                 <option value="TI">Tarjeta de identidad</option>
-                <option value="CE">Cédula de extranjería</option <option value="PS">Pasaporte</option </InputSelect>
+                <option value="CE">Cédula de extranjería</option>
+                <option value="PS">Pasaporte</option>
+            </InputSelect>
                 <ValidationMessage For="@(() => Person.typeDocument)" />
         </div>
     </div>
