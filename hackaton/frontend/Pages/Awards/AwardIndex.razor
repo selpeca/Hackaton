@@ -1,0 +1,88 @@
+﻿@page "/award"
+@using Hackaton.frontend.Repositories
+@using shared.Entities
+
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>AwardIndex</h3>
+<div class="mb-3">
+    <a href="/award/create" class="btn btn-primary">Crear premio</a>
+</div>
+
+<GenericList MyList="Awards">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Premios</th>
+                    <th>...</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Awards)
+                {
+                    <tr>
+                        <td>@item.position</td>
+                        <td>
+                            <a href="award/edit/@item.id" class="btn btn-sm btn-outline-warning">Editar</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick=@(() => DeleteAsync(item))>Eliminar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+@code {
+    public List<Award>? Awards { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHppt = await repository.GetAsync<List<Award>>("/api/award");
+        Awards = responseHppt.Response!;
+    }
+    private async Task DeleteAsync(Award Award)
+    {
+        var result = await swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Esta seguro que quieres borrar el registro?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHTTP = await repository.DeleteAsync($"api/award/{Award.id}");
+
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/");
+            }
+            else
+            {
+                var mensajeError = "await responseHTTP.GetErrorMessageAsync()";
+                await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            await Load();
+        }
+    }
+}

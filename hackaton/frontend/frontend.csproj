@@ -17,4 +17,12 @@
     <ProjectReference Include="..\shared\shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\MentorAreas\" />
+    <Folder Include="Pages\Evaluations\" />
+    <Folder Include="Pages\ExperienceParticipants\" />
+    <Folder Include="Pages\Hackatons\" />
+    <Folder Include="Pages\Participants\" />
+  </ItemGroup>
+
 </Project>

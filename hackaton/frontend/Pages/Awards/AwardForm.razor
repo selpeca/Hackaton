@@ -1,0 +1,49 @@
+﻿@using shared.Entities
+<EditForm Model="Award" OnSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Posición</label>
+        <div>
+            <InputNumber @bind-Value="Award.position" class="form-control" required />
+            <ValidationMessage For="@(() => Award.position)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Premio</label>
+        <div>
+            <InputText @bind-Value="Award.prize" class="form-control" required />
+            <ValidationMessage For="@(() => Award.prize)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Hackaton</label>
+        <div>
+            <InputSelect @bind-Value="Award.hackatonId" class="form-control" required>
+                <option value="1">Hackaton 1</option>
+                <option value="2">Hackaton 2</option>
+                <option value="3">Hackaton 3</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => Award.hackatonId)" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-dark" @onclick="() => ReturnAction.InvokeAsync(null)">Regresar</button>
+</EditForm>
+
+@code {
+
+    [EditorRequired]
+    [Parameter]
+    public Award Award{ get; set; }
+
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+
+}

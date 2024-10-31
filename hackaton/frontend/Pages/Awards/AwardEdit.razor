@@ -1,37 +1,37 @@
 ﻿@using shared.Entities
 
-@page "/person/edit/{id:int}"
+@page "/award/edit/{id:int}"
 
 @inject NavigationManager navigationManager
 @inject IRepository repository
 @inject SweetAlertService swal
-<h3>Editar Person</h3>
+<h3>Editar Award</h3>
 
-@if (Person is null)
+@if (Award is null)
 {
     <Loading/>
 }
 else
 {
-    <PersonForm @ref="PersonForm" Person="Person" OnSubmit="Edit" ReturnAction="@Return" />
+    <AwardForm @ref="AwardForm" Award="Award" OnSubmit="Edit" ReturnAction="@Return" />
 }
 
 @code {
-    private Person Person;
-    private PersonForm PersonForm;
+    private Award Award;
+    private AwardForm AwardForm;
 
     [Parameter]
     public int Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var responseHTTP = await repository.GetAsync<Person>($"/api/person/{Id}");
+        var responseHTTP = await repository.GetAsync<Award>($"/api/award/{Id}");
 
         if (responseHTTP.Error)
         {
             if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                navigationManager.NavigateTo("person");
+                navigationManager.NavigateTo("award");
             }
             else
             {
@@ -41,13 +41,13 @@ else
         }
         else
         {
-            Person = responseHTTP.Response;
+            Award = responseHTTP.Response;
         }
     }
 
     private async Task Edit()
     {
-        var responseHTTP = await repository.PutAsync("/api/person", Person);
+        var responseHTTP = await repository.PutAsync("/api/award", Award);
 
         if (responseHTTP.Error)
         {
@@ -57,12 +57,12 @@ else
         else
         {
           
-            navigationManager.NavigateTo("/person");
+            navigationManager.NavigateTo("/award");
         }
     }
 
     private void Return()
     {
-        navigationManager.NavigateTo("/person");
+        navigationManager.NavigateTo("/award");
     }
 }
