@@ -1,0 +1,37 @@
+@using shared.Entities
+<EditForm Model="MentorArea" OnSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>Área</label>
+        <div>
+            <InputText @bind-Value="MentorArea.area" class="form-control" required />
+            <ValidationMessage For="@(() => MentorArea.area)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Mentor ID</label>
+        <div>
+            <InputNumber @bind-Value="MentorArea.mentorId" class="form-control" required />
+            <ValidationMessage For="@(() => MentorArea.mentorId)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-dark" @onclick="() => ReturnAction.InvokeAsync(null)">Regresar</button>
+</EditForm>
+
+@code {
+    [EditorRequired]
+    [Parameter]
+    public MentorArea MentorArea { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+}

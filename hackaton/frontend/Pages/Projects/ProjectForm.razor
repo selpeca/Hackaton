@@ -1,0 +1,73 @@
+@using shared.Entities
+<EditForm Model="Project" OnSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>Nombre</label>
+        <div>
+            <InputText @bind-Value="Project.name" class="form-control" required />
+            <ValidationMessage For="@(() => Project.name)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Descripción</label>
+        <div>
+            <InputTextArea @bind-Value="Project.description" class="form-control" />
+            <ValidationMessage For="@(() => Project.description)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Estado</label>
+        <div>
+            <InputSelect @bind-Value="Project.status" class="form-control" required>
+                <option value="Por iniciar">Por iniciar</option>
+                <option value="En progreso">En progreso</option>
+                <option value="Finalizado">Finalizado</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => Project.status)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Fecha de entrega</label>
+        <div>
+            <InputDate @bind-Value="Project.deliveryDate" class="form-control" required />
+            <ValidationMessage For="@(() => Project.deliveryDate)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Team ID</label>
+        <div>
+            <InputNumber @bind-Value="Project.teamId" class="form-control" required />
+            <ValidationMessage For="@(() => Project.teamId)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Hackaton ID</label>
+        <div>
+            <InputNumber @bind-Value="Project.hackatonId" class="form-control" required />
+            <ValidationMessage For="@(() => Project.hackatonId)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-dark" @onclick="() => ReturnAction.InvokeAsync(null)">Regresar</button>
+</EditForm>
+
+@code {
+    [EditorRequired]
+    [Parameter]
+    public Project Project { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+}

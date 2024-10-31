@@ -1,0 +1,67 @@
+@using shared.Entities
+@page "/evaluation/edit/{id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+<h3>Editar Evaluación</h3>
+
+@if (Evaluation is null)
+{
+    <Loading/>
+}
+else
+{
+    <EvaluationForm @ref="EvaluationForm" Evaluation="Evaluation" OnSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private Evaluation Evaluation;
+    private EvaluationForm EvaluationForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHTTP = await repository.GetAsync<Evaluation>($"/api/evaluation/{Id}");
+
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/evaluation");
+            }
+            else
+            {
+                var messageError = await responseHTTP.GetErrorMessageAsync();
+                await swal.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            Evaluation = responseHTTP.Response;
+        }
+    }
+
+    private async Task Edit()
+    {
+        var responseHTTP = await repository.PutAsync("/api/evaluation", Evaluation);
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            navigationManager.NavigateTo("/evaluation");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/evaluation");
+    }
+}

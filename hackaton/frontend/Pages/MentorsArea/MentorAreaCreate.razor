@@ -1,0 +1,32 @@
+@using shared.Entities
+@page "/mentorarea/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear Área de Mentoría</h3>
+
+<MentorAreaForm @ref="mentorAreaForm" MentorArea="MentorArea" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    public MentorArea MentorArea = new();
+    public MentorAreaForm? mentorAreaForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/mentorarea", MentorArea);
+        if (responseHttp.Error)
+        {
+            var mensaje = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", mensaje);
+            return;
+        }
+        navigationManager.NavigateTo("/mentorarea");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/mentorarea");
+    }
+}

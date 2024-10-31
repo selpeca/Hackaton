@@ -1,0 +1,67 @@
+@using shared.Entities
+@page "/mentor/edit/{id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+<h3>Editar Mentor</h3>
+
+@if (Mentor is null)
+{
+    <Loading/>
+}
+else
+{
+    <MentorForm @ref="MentorForm" Mentor="Mentor" OnSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private Mentor Mentor;
+    private MentorForm MentorForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHTTP = await repository.GetAsync<Mentor>($"/api/mentor/{Id}");
+
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/mentor");
+            }
+            else
+            {
+                var messageError = await responseHTTP.GetErrorMessageAsync();
+                await swal.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            Mentor = responseHTTP.Response;
+        }
+    }
+
+    private async Task Edit()
+    {
+        var responseHTTP = await repository.PutAsync("/api/mentor", Mentor);
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            navigationManager.NavigateTo("/mentor");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/mentor");
+    }
+}

@@ -1,0 +1,88 @@
+@page "/project"
+@using Hackaton.frontend.Repositories
+@using shared.Entities
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>Proyectos</h3>
+<div class="mb-3">
+    <a href="/project/create" class="btn btn-primary">Crear Proyecto</a>
+</div>
+
+<GenericList MyList="Projects">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Fecha de entrega</th>
+                    <th>Team ID</th>
+                    <th>Hackaton ID</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Projects)
+                {
+                    <tr>
+                        <td>@item.name</td>
+                        <td>@item.description</td>
+                        <td>@item.status</td>
+                        <td>@item.deliveryDate.ToString("yyyy/MM/dd")</td>
+                        <td>@item.teamId</td>
+                        <td>@item.hackatonId</td>
+                        <td>
+                            <a href="project/edit/@item.id" class="btn btn-sm btn-outline-warning">Editar</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="@(() => DeleteAsync(item))">Eliminar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Project>? Projects { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHttp = await repository.GetAsync<List<Project>>("/api/project");
+        Projects = responseHttp.Response;
+    }
+
+    private async Task DeleteAsync(Project project)
+    {
+        var result = await swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Confirmación",
+            Text = "¿Estás seguro de que quieres borrar este proyecto?",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true
+        });
+
+        if (string.IsNullOrEmpty(result.Value))
+            return;
+
+        var responseHTTP = await repository.DeleteAsync($"api/project/{project.id}");
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            await Load();
+        }
+    }
+}

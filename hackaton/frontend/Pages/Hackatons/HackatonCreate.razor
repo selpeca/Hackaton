@@ -1,0 +1,32 @@
+@using shared.Entities
+@page "/hackaton/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear Hackatón</h3>
+
+<HackatonForm @ref="hackatonForm" Hackaton="Hackaton" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    public Hackaton Hackaton = new();
+    public HackatonForm? hackatonForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/hackaton", Hackaton);
+        if (responseHttp.Error)
+        {
+            var mensaje = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", mensaje);
+            return;
+        }
+        navigationManager.NavigateTo("/hackaton");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/hackaton");
+    }
+}

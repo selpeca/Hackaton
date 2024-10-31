@@ -1,0 +1,53 @@
+@using shared.Entities
+<EditForm Model="Hackaton" OnSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>Nombre</label>
+        <div>
+            <InputText @bind-Value="Hackaton.name" class="form-control" required />
+            <ValidationMessage For="@(() => Hackaton.name)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Fecha de inicio</label>
+        <div>
+            <InputDate @bind-Value="Hackaton.startDate" class="form-control" required />
+            <ValidationMessage For="@(() => Hackaton.startDate)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Fecha de finalización</label>
+        <div>
+            <InputDate @bind-Value="Hackaton.endDate" class="form-control" required />
+            <ValidationMessage For="@(() => Hackaton.endDate)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Project ID</label>
+        <div>
+            <InputNumber @bind-Value="Hackaton.projectId" class="form-control" required />
+            <ValidationMessage For="@(() => Hackaton.projectId)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-dark" @onclick="() => ReturnAction.InvokeAsync(null)">Regresar</button>
+</EditForm>
+
+@code {
+    [EditorRequired]
+    [Parameter]
+    public Hackaton Hackaton { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+}

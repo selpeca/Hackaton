@@ -1,0 +1,84 @@
+@page "/hackaton"
+@using Hackaton.frontend.Repositories
+@using shared.Entities
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>Hackatones</h3>
+<div class="mb-3">
+    <a href="/hackaton/create" class="btn btn-primary">Crear Hackatón</a>
+</div>
+
+<GenericList MyList="Hackatones">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Fecha de inicio</th>
+                    <th>Fecha de finalización</th>
+                    <th>Project ID</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Hackatones)
+                {
+                    <tr>
+                        <td>@item.name</td>
+                        <td>@item.startDate?.ToString("yyyy/MM/dd")</td>
+                        <td>@item.endDate?.ToString("yyyy/MM/dd")</td>
+                        <td>@item.projectId</td>
+                        <td>
+                            <a href="hackaton/edit/@item.id" class="btn btn-sm btn-outline-warning">Editar</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="@(() => DeleteAsync(item))">Eliminar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Hackaton>? Hackatones { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHttp = await repository.GetAsync<List<Hackaton>>("/api/hackaton");
+        Hackatones = responseHttp.Response;
+    }
+
+    private async Task DeleteAsync(Hackaton hackaton)
+    {
+        var result = await swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Confirmación",
+            Text = "¿Estás seguro de que quieres borrar este hackatón?",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true
+        });
+
+        if (string.IsNullOrEmpty(result.Value))
+            return;
+
+        var responseHTTP = await repository.DeleteAsync($"api/hackaton/{hackaton.id}");
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            await Load();
+        }
+    }
+}

@@ -1,0 +1,67 @@
+@using shared.Entities
+@page "/mentorarea/edit/{id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+<h3>Editar Área de Mentoría</h3>
+
+@if (MentorArea is null)
+{
+    <Loading/>
+}
+else
+{
+    <MentorAreaForm @ref="MentorAreaForm" MentorArea="MentorArea" OnSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private MentorArea MentorArea;
+    private MentorAreaForm MentorAreaForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHTTP = await repository.GetAsync<MentorArea>($"/api/mentorarea/{Id}");
+
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/mentorarea");
+            }
+            else
+            {
+                var messageError = await responseHTTP.GetErrorMessageAsync();
+                await swal.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            MentorArea = responseHTTP.Response;
+        }
+    }
+
+    private async Task Edit()
+    {
+        var responseHTTP = await repository.PutAsync("/api/mentorarea", MentorArea);
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            navigationManager.NavigateTo("/mentorarea");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/mentorarea");
+    }
+}

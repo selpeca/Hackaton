@@ -1,0 +1,86 @@
+@page "/evaluation"
+@using Hackaton.frontend.Repositories
+@using shared.Entities
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>Evaluaciones</h3>
+<div class="mb-3">
+    <a href="/evaluation/create" class="btn btn-primary">Crear Evaluación</a>
+</div>
+
+<GenericList MyList="Evaluations">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Criterio</th>
+                    <th>Puntuación</th>
+                    <th>Comentario</th>
+                    <th>Mentor ID</th>
+                    <th>Project ID</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Evaluations)
+                {
+                    <tr>
+                        <td>@item.judgment</td>
+                        <td>@item.score</td>
+                        <td>@item.comments</td>
+                        <td>@item.mentorId</td>
+                        <td>@item.projectId</td>
+                        <td>
+                            <a href="evaluation/edit/@item.id" class="btn btn-sm btn-outline-warning">Editar</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="@(() => DeleteAsync(item))">Eliminar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Evaluation>? Evaluations { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHttp = await repository.GetAsync<List<Evaluation>>("/api/evaluation");
+        Evaluations = responseHttp.Response;
+    }
+
+    private async Task DeleteAsync(Evaluation evaluation)
+    {
+        var result = await swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Confirmación",
+            Text = "¿Estás seguro de que quieres borrar esta evaluación?",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true
+        });
+
+        if (string.IsNullOrEmpty(result.Value))
+            return;
+
+        var responseHTTP = await repository.DeleteAsync($"api/evaluation/{evaluation.id}");
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            await Load();
+        }
+    }
+}

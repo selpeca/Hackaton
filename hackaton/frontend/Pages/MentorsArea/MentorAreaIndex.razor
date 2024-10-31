@@ -1,0 +1,80 @@
+@page "/mentorarea"
+@using Hackaton.frontend.Repositories
+@using shared.Entities
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>Áreas de Mentoría</h3>
+<div class="mb-3">
+    <a href="/mentorarea/create" class="btn btn-primary">Crear Área de Mentoría</a>
+</div>
+
+<GenericList MyList="MentorAreas">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Área</th>
+                    <th>Mentor ID</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in MentorAreas)
+                {
+                    <tr>
+                        <td>@item.area</td>
+                        <td>@item.mentorId</td>
+                        <td>
+                            <a href="mentorarea/edit/@item.id" class="btn btn-sm btn-outline-warning">Editar</a>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="@(() => DeleteAsync(item))">Eliminar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<MentorArea>? MentorAreas { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHttp = await repository.GetAsync<List<MentorArea>>("/api/mentorarea");
+        MentorAreas = responseHttp.Response;
+    }
+
+    private async Task DeleteAsync(MentorArea mentorArea)
+    {
+        var result = await swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Confirmación",
+            Text = "¿Estás seguro de que quieres borrar esta área de mentoría?",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true
+        });
+
+        if (string.IsNullOrEmpty(result.Value))
+            return;
+
+        var responseHTTP = await repository.DeleteAsync($"api/mentorarea/{mentorArea.id}");
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+            await Load();
+        }
+    }
+}

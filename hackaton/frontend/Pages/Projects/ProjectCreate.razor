@@ -1,0 +1,32 @@
+@using shared.Entities
+@page "/project/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear Proyecto</h3>
+
+<ProjectForm @ref="projectForm" Project="Project" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    public Project Project = new();
+    public ProjectForm? projectForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/project", Project);
+        if (responseHttp.Error)
+        {
+            var mensaje = await responseHttp.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", mensaje);
+            return;
+        }
+        navigationManager.NavigateTo("/project");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/project");
+    }
+}

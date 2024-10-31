@@ -1,0 +1,61 @@
+@using shared.Entities
+<EditForm Model="Evaluation" OnSubmit="OnSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>Criterio</label>
+        <div>
+            <InputText @bind-Value="Evaluation.judgment" class="form-control" required />
+            <ValidationMessage For="@(() => Evaluation.judgment)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Puntuación</label>
+        <div>
+            <InputNumber @bind-Value="Evaluation.score" class="form-control" required />
+            <ValidationMessage For="@(() => Evaluation.score)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Comentario</label>
+        <div>
+            <InputText @bind-Value="Evaluation.comments" class="form-control" />
+            <ValidationMessage For="@(() => Evaluation.comments)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Mentor ID</label>
+        <div>
+            <InputNumber @bind-Value="Evaluation.mentorId" class="form-control" required />
+            <ValidationMessage For="@(() => Evaluation.mentorId)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Project ID</label>
+        <div>
+            <InputNumber @bind-Value="Evaluation.projectId" class="form-control" required />
+            <ValidationMessage For="@(() => Evaluation.projectId)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-dark" @onclick="() => ReturnAction.InvokeAsync(null)">Regresar</button>
+</EditForm>
+
+@code {
+    [EditorRequired]
+    [Parameter]
+    public Evaluation Evaluation { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+}
