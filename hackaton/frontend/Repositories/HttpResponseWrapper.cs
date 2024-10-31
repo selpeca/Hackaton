@@ -1,45 +1,48 @@
 using System.Net;
 
-namespace Hackaton.frontend.Repositories;
-
-public class HttpResponseWrapper<T>
+namespace Hackaton.frontend.Repositories
 {
-    public T? Response { get; set; }
-    public HttpResponseMessage HttpResponseMessage { get; set; }
-    public bool Error { get; set; }
-
-    public HttpResponseWrapper(T? response, bool error, HttpResponseMessage httpResponseMessage)
+    public class HttpResponseWrapper<T>
     {
-        Error = error;
-        Response = response;
-        HttpResponseMessage = httpResponseMessage;
-    }
-
-    public async Task<string?> GetErrorMessage()
-    {
-        if (!Error)
+        public HttpResponseWrapper(T? response, bool error, HttpResponseMessage httpResponseMessage)
         {
-            return null;
+            Error = error;
+            Response = response;
+            HttpResponseMessage = httpResponseMessage;
         }
 
-        var codigoEstatus = HttpResponseMessage.StatusCode;
-        if (codigoEstatus == HttpStatusCode.NotFound)//404
-        {
-            return "Recurso no encontrado";
-        }
-        else if (codigoEstatus == HttpStatusCode.BadRequest)//400
-        {
-            return await HttpResponseMessage.Content.ReadAsStringAsync();
-        }
-        else if (codigoEstatus == HttpStatusCode.Unauthorized)//401
-        {
-            return " Debes loguearte para realizar esta acción";
-        }
-        else if (codigoEstatus == HttpStatusCode.Forbidden)//403
-        {
-            return " No tienes permisos para ejecutar esta acción";
-        }
+        public bool Error { get; set; }
 
-        return "Ha ocurrido un error inesperado";
+        public T? Response { get; set; }
+
+        public HttpResponseMessage HttpResponseMessage { get; set; }
+
+        public async Task<string> GetErrorMessageAsync()
+        {
+            if (!Error)
+            {
+                return null;
+            }
+
+            var codigoEstatus = HttpResponseMessage.StatusCode;
+            if (codigoEstatus == HttpStatusCode.NotFound)//404
+            {
+                return "Recurso no encontrado";
+            }
+            else if (codigoEstatus == HttpStatusCode.BadRequest)//400
+            {
+                return await HttpResponseMessage.Content.ReadAsStringAsync();
+            }
+            else if (codigoEstatus == HttpStatusCode.Unauthorized)//401
+            {
+                return " Debes loguearte para realizar esta acción";
+            }
+            else if (codigoEstatus == HttpStatusCode.Forbidden)//403
+            {
+                return " No tienes permisos para ejecutar esta acción";
+            }
+
+            return "Ha ocurrido un error inesperado";
+        }
     }
 }

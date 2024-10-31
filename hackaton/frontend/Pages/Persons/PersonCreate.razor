@@ -10,22 +10,22 @@
 
 @code {
     public Person Person = new();
-    public PersonForm personForm;
+    public PersonForm? personForm;
 
     private async Task Create()
     {
-        var responseHttp = await repository.PostAsync("/api/owners", Person);
+        var responseHttp = await repository.PostAsync("/api/person", Person);
         if (responseHttp.Error)
         {
-            var mensaje = "await responseHttp.GetErrorMessageAsync()";
+            var mensaje = await responseHttp.GetErrorMessageAsync();
             await sweetAlertService.FireAsync("Error", mensaje);
             return;
         }
-        navigationManager.NavigateTo("/owners");
+        navigationManager.NavigateTo("/person");
 
     }
     private void Return()
     {
-        navigationManager.NavigateTo("/owners");
+        navigationManager.NavigateTo("/person");
     }
 }

@@ -3,15 +3,45 @@
 
     <DataAnnotationsValidator/>
     <div class="mb-3">
-
         <label>Nombre</label>
         <div>
-            <InputText width="10" @bind-Value="Person.name" />
+            <InputText @bind-Value="Person.name" class="form-control" required/>
             <ValidationMessage For="@(() => Person.name)" />
         </div>
     </div>
-
-
+    <div class="mb-3">
+        <label>Apellido</label>
+        <div>
+            <InputText @bind-Value="Person.lastName" class="form-control" required/>
+            <ValidationMessage For="@(() => Person.lastName)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Cumpleaños</label>
+        <div>
+            <InputDate @bind-Value="Person.birthDate" class="form-control" required/>
+            <ValidationMessage For="@(() => Person.birthDate)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Tipo de documento</label>
+        <div>
+            <InputSelect @bind-Value="Person.typeDocument" class="form-control" required>
+                <option value="CC">Cédula de ciudadanía</option>
+                <option value="TI">Tarjeta de identidad</option>
+                <option value="CE">Cédula de extranjería</option
+                <option value="PS">Pasaporte</option
+            </InputSelect>
+            <ValidationMessage For="@(() => Person.typeDocument)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Numero</label>
+        <div>
+            <InputText @bind-Value="Person.document" class="form-control" required/>
+            <ValidationMessage For="@(() => Person.document)" />
+        </div>
+    </div>
     <button class="btn btn-primary" type="submit">Guardar</button>
     <button class="btn btn-success" onclick="ReturnAction">Regresar</button>
 
