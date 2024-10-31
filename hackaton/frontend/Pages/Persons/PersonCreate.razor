@@ -1,0 +1,31 @@
+﻿@using shared.Entities
+@page "/person/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+<h3>Person Create</h3>
+
+<PersonForm @ref="personForm" Person="Person" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    public Person Person = new();
+    public PersonForm personForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/owners", Person);
+        if (responseHttp.Error)
+        {
+            var mensaje = "await responseHttp.GetErrorMessageAsync()";
+            await sweetAlertService.FireAsync("Error", mensaje);
+            return;
+        }
+        navigationManager.NavigateTo("/owners");
+
+    }
+    private void Return()
+    {
+        navigationManager.NavigateTo("/owners");
+    }
+}

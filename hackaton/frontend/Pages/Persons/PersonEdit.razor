@@ -1,0 +1,68 @@
+﻿@using shared.Entities
+
+@page "/person/edit/{id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+<h3>Editar Person</h3>
+
+@if (Person is null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <PersonForm @ref="PersonForm" Person="Person" OnSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private Person Person;
+    private PersonForm PersonForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHTTP = await repository.GetAsync<Person>($"/api/person/{Id}");
+
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("person");
+            }
+            else
+            {
+                var messageError = "await responseHTTP.GetErrorMessageAsync()";
+                await swal.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            Person = responseHTTP.Response;
+        }
+    }
+
+    private async Task Edit()
+    {
+        var responseHTTP = await repository.PutAsync("/api/person", Person);
+
+        if (responseHTTP.Error)
+        {
+            var mensajeError = "await responseHTTP.GetErrorMessageAsync()";
+            await swal.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+        }
+        else
+        {
+          
+            navigationManager.NavigateTo("/person");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/person");
+    }
+}

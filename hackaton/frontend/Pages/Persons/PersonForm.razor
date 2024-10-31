@@ -1,0 +1,37 @@
+﻿@using shared.Entities
+<EditForm Model="Person" OnSubmit="OnSubmit">
+
+    <DataAnnotationsValidator/>
+    <div class="mb-3">
+
+        <label>Nombre</label>
+        <div>
+            <InputText width="10" @bind-Value="Person.name" />
+            <ValidationMessage For="@(() => Person.name)" />
+        </div>
+    </div>
+
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-success" onclick="ReturnAction">Regresar</button>
+
+
+</EditForm>
+
+@code {
+
+    [EditorRequired]
+    [Parameter]
+    public Person Person{ get; set; }
+
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+
+}
